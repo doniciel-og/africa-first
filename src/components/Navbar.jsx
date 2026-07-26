@@ -1,55 +1,87 @@
+import { Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
   return (
-    <header className="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md border-b border-white/10 z-50">
-      <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+    <header className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-green-500/20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
 
+        {/* Logo */}
         <div className="flex items-center gap-3">
-  <img
-    src={logo}
-    alt="Africa First"
-    className="w-12 h-12 rounded-full"
-  />
 
-  <div>
-    <h1 className="text-xl font-bold text-white">
-      AFRICA FIRST
-    </h1>
+          <img
+            src={logo}
+            alt="Africa First"
+            className="w-12 h-12 rounded-full object-cover"
+          />
 
-    <p className="text-green-400 text-sm">
-      Connect. Invest. Grow.
-    </p>
-  </div>
-</div>
+          <div>
+            <h1 className="text-white font-bold text-xl">
+              Africa First
+            </h1>
 
-        <nav className="hidden md:flex items-center gap-8 text-white">
+            <p className="text-green-400 text-xs tracking-widest uppercase">
+              Connect • Invest • Grow
+            </p>
+          </div>
 
-          <a href="#" className="hover:text-green-400 transition">
-            Accueil
-          </a>
+        </div>
 
-          <a href="#" className="hover:text-green-400 transition">
-            Partenariats
-          </a>
+        {/* Menu Desktop */}
+        <nav className="hidden lg:flex items-center gap-8">
 
-          <a href="#" className="hover:text-green-400 transition">
-            Investissements
-          </a>
+  <Link
+    to="/"
+    className="text-white hover:text-green-400 transition"
+  >
+    Accueil
+  </Link>
 
-          <a href="#" className="hover:text-green-400 transition">
-            Emplois
-          </a>
+  <Link
+    to="/jobs"
+    className="text-white hover:text-green-400 transition"
+  >
+    Emplois
+  </Link>
 
-          <a href="#" className="hover:text-green-400 transition">
-            Formations
-          </a>
+  <Link
+    to="/investments"
+    className="text-white hover:text-green-400 transition"
+  >
+    Investissements
+  </Link>
 
-        </nav>
+  <Link
+    to="/partnerships"
+    className="text-white hover:text-green-400 transition"
+  >
+    Partenariats
+  </Link>
 
-        <button className="bg-green-500 hover:bg-green-600 transition px-6 py-3 rounded-xl text-white font-semibold">
-          Commencer
-        </button>
+  <Link
+    to="/training"
+    className="text-white hover:text-green-400 transition"
+  >
+    Formations
+  </Link>
+
+</nav>
+
+        {/* Bouton */}
+        <div className="hidden lg:block">
+          <button className="bg-green-500 hover:bg-green-600 transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl text-white font-semibold shadow-lg">
+            Commencer
+          </button>
+        </div>
+
+        {/* Menu Mobile */}
+        <Link
+  to="/register"
+  className="bg-green-500 hover:bg-green-600 transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl text-white font-semibold shadow-lg"
+>
+  Commencer
+</Link>
 
       </div>
     </header>
