@@ -1,8 +1,24 @@
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+const handleLogout = async () => {
+  await signOut(auth);
+};
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-green-500/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -69,11 +85,44 @@ export default function Navbar() {
 </nav>
 
         {/* Bouton */}
-        <div className="hidden lg:block">
-          <button className="bg-green-500 hover:bg-green-600 transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl text-white font-semibold shadow-lg">
-            Commencer
-          </button>
-        </div>
+        <div className="hidden lg:flex items-center gap-4">
+
+ {user ? (
+  <div className="hidden lg:flex items-center gap-4">
+
+    <span className="text-white font-semibold">
+      {user.email}
+    </span>
+
+    <button
+      onClick={handleLogout}
+      className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg"
+    >
+      Déconnexion
+    </button>
+
+  </div>
+) : (
+  <div className="hidden lg:flex items-center gap-4">
+
+    <Link
+      to="/login"
+      className="text-white hover:text-green-400"
+    >
+      Connexion
+    </Link>
+
+    <Link
+      to="/register"
+      className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+    >
+      Inscription
+    </Link>
+
+  </div>
+)}
+
+</div>
 
         {/* Menu Mobile */}
         <Link
