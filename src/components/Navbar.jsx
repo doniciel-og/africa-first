@@ -1,38 +1,57 @@
-function Navbar() {
+import logo from "../assets/logo.png";
+
+export default function Navbar() {
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "20px 60px",
-        background: "white",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-      }}
-    >
-      <h2 style={{ color: "#008f5d" }}>🌍 AFRICA FIRST</h2>
+    <header className="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md border-b border-white/10 z-50">
+      <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
 
-      <ul
-        style={{
-          display: "flex",
-          gap: "30px",
-          listStyle: "none",
-          fontWeight: "bold",
-        }}
-      >
-        <li>Accueil</li>
-        <li>Partenariats</li>
-        <li>Investissements</li>
-        <li>Emplois</li>
-        <li>Formations</li>
-      </ul>
+        <div className="flex items-center gap-3">
+  <img
+    src={logo}
+    alt="Africa First"
+    className="w-12 h-12 rounded-full"
+  />
 
-      <div>
-        <button style={{ marginRight: "10px" }}>Connexion</button>
-        <button>Créer un compte</button>
+  <div>
+    <h1 className="text-xl font-bold text-white">
+      AFRICA FIRST
+    </h1>
+
+    <p className="text-green-400 text-sm">
+      Connect. Invest. Grow.
+    </p>
+  </div>
+</div>
+
+        <nav className="hidden md:flex items-center gap-8 text-white">
+
+          <a href="#" className="hover:text-green-400 transition">
+            Accueil
+          </a>
+
+          <a href="#" className="hover:text-green-400 transition">
+            Partenariats
+          </a>
+
+          <a href="#" className="hover:text-green-400 transition">
+            Investissements
+          </a>
+
+          <a href="#" className="hover:text-green-400 transition">
+            Emplois
+          </a>
+
+          <a href="#" className="hover:text-green-400 transition">
+            Formations
+          </a>
+
+        </nav>
+
+        <button className="bg-green-500 hover:bg-green-600 transition px-6 py-3 rounded-xl text-white font-semibold">
+          Commencer
+        </button>
+
       </div>
-    </nav>
+    </header>
   );
 }
-
-export default Navbar;
