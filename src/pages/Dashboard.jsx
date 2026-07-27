@@ -1,7 +1,25 @@
-import { auth } from "../firebase";
+import { useEffect, useState } from "react";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Dashboard() {
   const user = auth.currentUser;
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    async function loadProfile() {
+      if (!user) return;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setProfile(docSnap.data());
+      }
+    }
+
+    loadProfile();
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gray-100 pt-28 pb-16">
@@ -12,19 +30,31 @@ export default function Dashboard() {
           <div className="flex items-center gap-6">
 
             <img
-              src="https://ui-avatars.com/api/?name=User&background=16a34a&color=fff&size=128"
+              src={`https://ui-avatars.com/api/?name=${
+                profile?.fullName || "User"
+              }&background=16a34a&color=fff&size=128`}
               alt="Profil"
               className="w-28 h-28 rounded-full"
             />
 
             <div>
+
               <h1 className="text-4xl font-bold">
-                Bienvenue 👋
+                Bienvenue {profile?.fullName || "Utilisateur"} 👋
               </h1>
 
-              <p className="text-gray-500 mt-2">
-                {user?.email}
-              </p>
+              <div className="mt-4 space-y-2 text-gray-600">
+
+                <p>📧 {profile?.email}</p>
+
+                <p>🌍 {profile?.country}</p>
+
+                <p>📍 {profile?.city}</p>
+
+                <p>👤 {profile?.accountType}</p>
+
+              </div>
+
             </div>
 
           </div>

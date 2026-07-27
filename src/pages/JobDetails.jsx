@@ -1,46 +1,84 @@
-import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../firebase";
-import jobs from "../data/jobs";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import {
+  doc,
+  getDoc,
+  addDoc,
+  collection,
+} from "firebase/firestore";
+import { db, auth } from "../firebase";
+
 export default function JobDetails() {
-    const { id } = useParams();
+  const { id } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    loadJob();
+  }, []);
 
+  async function loadJob() {
+    try {
+      const docRef = doc(db, "jobs", id);
+      const docSnap = await getDoc(docRef);
 
-const job = jobs.find((job) => job.id === Number(id));
+      if (docSnap.exists()) {
+        setJob({
+          id: docSnap.id,
+          ...docSnap.data(),
+        });
+      }
 
-if (!job) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold">
-        Offre introuvable
-      </h1>
-    </div>
-  );
-}
-
-const handleApply = async () => {
-  if (!auth.currentUser) {
-    alert("Veuillez vous connecter.");
-    return;
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   }
 
-  try {
-    await addDoc(collection(db, "applications"), {
-      userId: auth.currentUser.uid,
-      email: auth.currentUser.email,
-      jobId: id,
-      jobTitle: job.title,
-      company: job.company,
-      createdAt: new Date(),
-    });
-
-    alert("✅ Candidature envoyée avec succès !");
-  } catch (error) {
-    console.log(error);
-    alert("Erreur lors de l'envoi.");
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl font-bold">
+          Chargement...
+        </h1>
+      </div>
+    );
   }
-};
+
+  if (!job) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-3xl font-bold">
+          Offre introuvable
+        </h1>
+      </div>
+    );
+  }
+
+  async function handleApply() {
+    if (!auth.currentUser) {
+      alert("Veuillez vous connecter.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "applications"), {
+        userId: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        jobId: job.id,
+        jobTitle: job.title,
+        company: job.company,
+        createdAt: new Date(),
+      });
+
+      alert("✅ Candidature envoyée avec succès !");
+    } catch (error) {
+      console.log(error);
+      alert("Erreur lors de l'envoi.");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 pt-28 pb-16">
       <div className="max-w-5xl mx-auto px-6">
@@ -48,24 +86,22 @@ const handleApply = async () => {
         <div className="bg-white rounded-3xl shadow-xl p-10">
 
           <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold">
-            CDI
+            Emploi
           </span>
 
-          <h1>{job.title}</h1>
+          <h1 className="text-4xl font-bold mt-4">
+            {job.title}
+          </h1>
 
           <p className="text-xl text-gray-500 mt-3">
-  {job.company}
-</p>
+            {job.company}
+          </p>
 
           <div className="mt-8 space-y-4 text-lg">
 
-            <p>
-  📍 {job.location}
-</p>
+            <p>📍 {job.location}</p>
 
-            <p>
-  💰 Salaire : {job.salary}
-</p>
+            <p>💰 Salaire : {job.salary}</p>
 
           </div>
 
@@ -76,37 +112,17 @@ const handleApply = async () => {
             </h2>
 
             <p className="text-gray-600 leading-8">
-  {job.description}
-</p>
-
-          </div>
-
-          <div className="mt-10">
-
-            <h2 className="text-3xl font-bold mb-4">
-              Compétences
-            </h2>
-
-            <ul className="space-y-3">
-
-              <li>✅ React.js</li>
-
-              <li>✅ JavaScript ES6</li>
-
-              <li>✅ Tailwind CSS</li>
-
-              <li>✅ Git & GitHub</li>
-
-            </ul>
+              {job.description}
+            </p>
 
           </div>
 
           <button
-  onClick={handleApply}
-  className="mt-12 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold"
->
-  Postuler maintenant
-</button>
+            onClick={handleApply}
+            className="mt-12 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold"
+          >
+            Postuler maintenant
+          </button>
 
         </div>
 

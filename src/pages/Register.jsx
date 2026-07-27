@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function Register() {
+  const [fullName, setFullName] = useState("");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [accountType, setAccountType] = useState("Candidat");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -10,7 +15,23 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        fullName,
+        email,
+        country,
+        city,
+        accountType,
+        role: "user",
+        photoURL: "",
+        createdAt: new Date(),
+      });
+
       alert("Compte créé avec succès !");
     } catch (error) {
       alert(error.message);
@@ -26,6 +47,44 @@ export default function Register() {
         <h1 className="text-3xl font-bold mb-6 text-center">
           Créer un compte
         </h1>
+
+        <input
+          type="text"
+          placeholder="Nom complet"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          className="w-full border p-3 rounded-lg mb-4"
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Pays"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="w-full border p-3 rounded-lg mb-4"
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Ville"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="w-full border p-3 rounded-lg mb-4"
+          required
+        />
+
+        <select
+          value={accountType}
+          onChange={(e) => setAccountType(e.target.value)}
+          className="w-full border p-3 rounded-lg mb-4"
+        >
+          <option>Candidat</option>
+          <option>Entreprise</option>
+          <option>Investisseur</option>
+          <option>Formateur</option>
+        </select>
 
         <input
           type="email"
