@@ -1,20 +1,30 @@
-import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  });
 
+  return () => unsubscribe();
+}, [navigate]);
   async function handleLogin(e) {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Connexion réussie !");
-    } catch (error) {
-      alert(error.message);
-    }
+  await signInWithEmailAndPassword(auth, email, password);
+  navigate("/dashboard", { replace: true });
+} catch (error) {
+  alert(error.message);
+}
   }
 
   return (
