@@ -1,24 +1,93 @@
 import { useEffect, useState } from "react";
-import { auth, db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
 
+import { auth, db } from "../firebase";
+import { Link } from "react-router-dom";
+import {
+
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+<div className="mt-10 flex flex-wrap gap-4">
+
+  <Link
+    to="/my-jobs"
+    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
+  >
+    💼 Mes offres d'emploi
+  </Link>
+
+</div>
 export default function Dashboard() {
   const user = auth.currentUser;
+
   const [profile, setProfile] = useState(null);
 
+  const [applications, setApplications] = useState(0);
+  const [investments, setInvestments] = useState(0);
+  const [partnerships, setPartnerships] = useState(0);
+const [jobs, setJobs] = useState(0);
+const [trainings, setTrainings] = useState(0);
   useEffect(() => {
-    async function loadProfile() {
+    async function loadDashboard() {
       if (!user) return;
 
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
+      // Profil
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-      if (docSnap.exists()) {
-        setProfile(docSnap.data());
+      if (userSnap.exists()) {
+        setProfile(userSnap.data());
       }
+
+      // Candidatures
+      const applicationsQuery = query(
+        collection(db, "applications"),
+        where("userId", "==", user.uid)
+      );
+      
+// Emplois publiés
+const jobsQuery = query(
+  collection(db, "jobs"),
+  where("userId", "==", user.uid)
+);
+
+const jobsSnap = await getDocs(jobsQuery);
+setJobs(jobsSnap.size);
+      const applicationsSnap = await getDocs(applicationsQuery);
+      setApplications(applicationsSnap.size);
+
+      // Investissements publiés
+      const investmentsQuery = query(
+        collection(db, "investments"),
+        where("userId", "==", user.uid)
+      );
+
+      const investmentsSnap = await getDocs(investmentsQuery);
+      setInvestments(investmentsSnap.size);
+
+      // Partenariats publiés
+      const partnershipsQuery = query(
+        collection(db, "partnerships"),
+        where("userId", "==", user.uid)
+      );
+      
+// Formations publiées
+const trainingsQuery = query(
+  collection(db, "trainings"),
+  where("userId", "==", user.uid)
+);
+
+const trainingsSnap = await getDocs(trainingsQuery);
+setTrainings(trainingsSnap.size);
+      const partnershipsSnap = await getDocs(partnershipsQuery);
+      setPartnerships(partnershipsSnap.size);
     }
 
-    loadProfile();
+    loadDashboard();
   }, [user]);
 
   return (
@@ -28,7 +97,28 @@ export default function Dashboard() {
         <div className="bg-white rounded-3xl shadow-xl p-10">
 
           <div className="flex items-center gap-6">
+<div className="mt-10 flex flex-wrap gap-4">
 
+  <Link
+    to="/my-jobs"
+    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
+  >
+    💼 Mes offres
+  </Link>
+<Link
+  to="/my-partnerships"
+  className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-xl font-semibold"
+>
+  🤝 Mes partenariats
+</Link>
+  <Link
+    to="/my-investments"
+    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
+  >
+    💰 Mes investissements
+  </Link>
+
+</div>
             <img
               src={`https://ui-avatars.com/api/?name=${
                 profile?.fullName || "User"
@@ -59,23 +149,39 @@ export default function Dashboard() {
 
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mt-12">
 
             <div className="bg-green-50 rounded-2xl p-6">
-              <h2 className="text-4xl font-bold text-green-600">0</h2>
+              <h2 className="text-4xl font-bold text-green-600">
+                {applications}
+              </h2>
               <p>Candidatures</p>
             </div>
-
+<div className="bg-indigo-50 rounded-2xl p-6">
+  <h2 className="text-4xl font-bold text-indigo-600">
+    {jobs}
+  </h2>
+  <p>Emplois publiés</p>
+</div>
             <div className="bg-blue-50 rounded-2xl p-6">
-              <h2 className="text-4xl font-bold text-blue-600">0</h2>
-              <p>Investissements</p>
+              <h2 className="text-4xl font-bold text-blue-600">
+                {investments}
+              </h2>
+              <p>Investissements publiés</p>
             </div>
 
             <div className="bg-yellow-50 rounded-2xl p-6">
-              <h2 className="text-4xl font-bold text-yellow-600">0</h2>
-              <p>Partenariats</p>
+              <h2 className="text-4xl font-bold text-yellow-600">
+                {partnerships}
+              </h2>
+              <p>Partenariats publiés</p>
             </div>
-
+<div className="bg-purple-50 rounded-2xl p-6">
+  <h2 className="text-4xl font-bold text-purple-600">
+    {trainings}
+  </h2>
+  <p>Formations publiées</p>
+</div>
           </div>
 
         </div>

@@ -7,6 +7,7 @@ import {
   Globe,
   Rocket,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Features() {
   return (
@@ -45,37 +46,49 @@ export default function Features() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-28">
 
-          <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all">
+          <Link
+            to="/partnerships"
+            className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer block"
+          >
             <Handshake className="text-green-600 mb-5" size={50} />
             <h3 className="text-2xl font-bold mb-3">Partenariats</h3>
             <p className="text-gray-600">
               Développez votre réseau avec des partenaires fiables.
             </p>
-          </div>
+          </Link>
 
-          <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all">
+          <Link
+            to="/investments"
+            className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer block"
+          >
             <TrendingUp className="text-green-600 mb-5" size={50} />
             <h3 className="text-2xl font-bold mb-3">Investissements</h3>
             <p className="text-gray-600">
               Trouvez les investisseurs adaptés à vos projets.
             </p>
-          </div>
+          </Link>
 
-          <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all">
+          <Link
+            to="/jobs"
+            className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer block"
+          >
             <BriefcaseBusiness className="text-green-600 mb-5" size={50} />
             <h3 className="text-2xl font-bold mb-3">Emplois</h3>
             <p className="text-gray-600">
               Recrutez les meilleurs talents ou trouvez un emploi.
             </p>
-          </div>
+          </Link>
 
-          <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all">
+          <Link
+            to="/training"
+            className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer block"
+          >
             <GraduationCap className="text-green-600 mb-5" size={50} />
             <h3 className="text-2xl font-bold mb-3">Formations</h3>
             <p className="text-gray-600">
               Développez vos compétences grâce à des formations de qualité.
             </p>
-          </div>
+          </Link>
 
         </div>
 

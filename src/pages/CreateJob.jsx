@@ -2,7 +2,7 @@ import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-
+import { uploadImage } from "../utils/cloudinary";
 export default function CreateJob() {
   const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ export default function CreateJob() {
   const [location, setLocation] = useState("");
   const [salary, setSalary] = useState("");
   const [description, setDescription] = useState("");
-
+const [image, setImage] = useState(null);
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -21,21 +21,28 @@ export default function CreateJob() {
     }
 
     try {
-      await addDoc(collection(db, "jobs"), {
-        title,
-        company,
-        location,
-        salary,
-        description,
-        userId: auth.currentUser.uid,
-        createdAt: new Date(),
-      });
+  let imageUrl = "";
 
-      alert("✅ Offre publiée avec succès !");
+  if (image) {
+    imageUrl = await uploadImage(image);
+  }
 
-      navigate("/jobs");
-    } catch (error) {
-      console.log(error);
+  await addDoc(collection(db, "jobs"), {
+    title,
+    company,
+    location,
+    salary,
+    description,
+    image: imageUrl,
+    userId: auth.currentUser.uid,
+    createdAt: new Date(),
+  });
+
+  alert("✅ Offre publiée avec succès !");
+
+  navigate("/jobs");
+} catch (error) {
+      console.log(error)
       alert("Erreur lors de la publication.");
     }
   }
@@ -85,7 +92,18 @@ export default function CreateJob() {
             className="w-full border p-4 rounded-xl"
             required
           />
+<div>
+  <label className="block font-semibold mb-2">
+    Image de l'offre
+  </label>
 
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setImage(e.target.files[0])}
+    className="w-full border p-4 rounded-xl"
+  />
+</div>
           <textarea
             rows="6"
             placeholder="Description de l'offre"

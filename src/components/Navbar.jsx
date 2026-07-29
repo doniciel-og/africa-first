@@ -22,13 +22,12 @@ export default function Navbar() {
     return () => unsubscribe();
   }, []);
 
-
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-green-500/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
 
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
 
           <img
             src={logo}
@@ -46,94 +45,98 @@ export default function Navbar() {
             </p>
           </div>
 
-        </div>
+        </Link>
 
-        {/* Menu Desktop */}
+        {/* Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
 
-  <Link
-    to="/"
-    className="text-white hover:text-green-400 transition"
-  >
-    Accueil
-  </Link>
+          <Link
+            to="/"
+            className="text-white hover:text-green-400 transition"
+          >
+            Accueil
+          </Link>
 
-  <Link
-    to="/jobs"
-    className="text-white hover:text-green-400 transition"
-  >
-    Emplois
-  </Link>
+          <Link
+            to="/jobs"
+            className="text-white hover:text-green-400 transition"
+          >
+            Emplois
+          </Link>
 
-  <Link
-    to="/investments"
-    className="text-white hover:text-green-400 transition"
-  >
-    Investissements
-  </Link>
+          <Link
+            to="/investments"
+            className="text-white hover:text-green-400 transition"
+          >
+            Investissements
+          </Link>
 
-  <Link
-    to="/partnerships"
-    className="text-white hover:text-green-400 transition"
-  >
-    Partenariats
-  </Link>
+          <Link
+            to="/training"
+            className="text-white hover:text-green-400 transition"
+          >
+            Formations
+          </Link>
 
-  <Link
-    to="/training"
-    className="text-white hover:text-green-400 transition"
-  >
-    Formations
-  </Link>
+          <Link
+            to="/partnerships"
+            className="text-white hover:text-green-400 transition"
+          >
+            Partenariats
+          </Link>
 
-</nav>
+        </nav>
 
-        {/* Bouton */}
-        <div className="hidden lg:flex items-center gap-4">
+        {/* Utilisateur */}
+        <div className="hidden lg:flex items-center gap-3">
 
- {user ? (
-  <div className="hidden lg:flex items-center gap-4">
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="bg-white hover:bg-gray-100 text-black px-4 py-2 rounded-lg font-semibold"
+              >
+                Dashboard
+              </Link>
 
-    <span className="text-white font-semibold">
-      <Link
-  to="/dashboard"
-  className="bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-xl font-semibold"
->
-  👤 Mon compte
-</Link>
-    </span>
+              <Link
+                to="/profile"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold"
+              >
+                Mon Profil
+              </Link>
 
-    <button
-      onClick={handleLogout}
-      className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg"
-    >
-      Déconnexion
-    </button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold"
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-white hover:text-green-400"
+              >
+                Connexion
+              </Link>
 
-  </div>
-) : (
-  <div className="hidden lg:flex items-center gap-4">
+              <Link
+                to="/register"
+                className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold"
+              >
+                Inscription
+              </Link>
+            </>
+          )}
 
-    <Link
-      to="/login"
-      className="text-white hover:text-green-400"
-    >
-      Connexion
-    </Link>
+        </div>
 
-    <Link
-      to="/register"
-      className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
-    >
-      Inscription
-    </Link>
-
-  </div>
-)}
-
-</div>
-
-        
+        {/* Mobile */}
+        <button className="lg:hidden text-white">
+          <Menu size={30} />
+        </button>
 
       </div>
     </header>

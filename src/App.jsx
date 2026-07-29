@@ -1,19 +1,34 @@
-import Dashboard from "./pages/Dashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import CreateJob from "./pages/CreateJob";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import CreateTraining from "./pages/CreateTraining";
+
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+
 import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
+import CreateJob from "./pages/CreateJob";
+import MyJobs from "./pages/MyJobs";
+import EditJob from "./pages/EditJob";
+import MyApplications from "./pages/MyApplications";
 import Investments from "./pages/Investments";
-import Partnerships from "./pages/Partnerships";
+import MyInvestments from "./pages/MyInvestments";
+import EditInvestment from "./pages/EditInvestment";
+import CreateInvestment from "./pages/CreateInvestment";
+import MyApplicationsUser from "./pages/MyApplicationsUser";
 import Training from "./pages/Training";
+import CreateTraining from "./pages/CreateTraining";
+import MyTrainings from "./pages/MyTrainings";
+import EditTraining from "./pages/EditTraining";
+import Partnerships from "./pages/Partnerships";
+import CreatePartnership from "./pages/CreatePartnership";
+import MyPartnerships from "./pages/MyPartnerships";
+import EditPartnership from "./pages/EditPartnership";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import CreateInvestment from "./pages/CreateInvestment";
-import CreatePartnership from "./pages/CreatePartnership";
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,46 +36,82 @@ function App() {
       <Navbar />
 
       <Routes>
-<Route
-  path="/create-training"
-  element={<CreateTraining />}
-/>
+
         <Route path="/" element={<Home />} />
+
         <Route path="/dashboard" element={<Dashboard />} />
-<Route path="/create-job" element={<CreateJob />} />
+        <Route path="/profile" element={<Profile />} />
+
+        {/* EMPLOIS */}
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/create-job" element={<CreateJob />} />
+        <Route path="/my-jobs" element={<MyJobs />} />
+        <Route path="/edit-job/:id" element={<EditJob />} />
+
+        {/* INVESTISSEMENTS */}
+        <Route path="/investments" element={<Investments />} />
+
 <Route
   path="/create-investment"
   element={<CreateInvestment />}
 />
-        <Route
-          path="/investments"
-          element={<Investments />}
-        />
+
+<Route
+  path="/my-investments"
+  element={<MyInvestments />}
+/>
+
+<Route
+  path="/edit-investment/:id"
+  element={<EditInvestment />}
+/>
+
+        {/* FORMATIONS */}
+<Route path="/training" element={<Training />} />
+
+<Route
+  path="/create-training"
+  element={<CreateTraining />}
+/>
+
+<Route
+  path="/my-trainings"
+  element={<MyTrainings />}
+/>
+<Route
+  path="/my-applications"
+  element={<MyApplications />}
+/>
+<Route
+  path="/edit-training/:id"
+  element={<EditTraining />}
+/>
+
+        {/* PARTENARIATS */}
+<Route
+  path="/partnerships"
+  element={<Partnerships />}
+/>
+
 <Route
   path="/create-partnership"
   element={<CreatePartnership />}
 />
-        <Route
-          path="/partnerships"
-          element={<Partnerships />}
-        />
 
-        <Route
-          path="/training"
-          element={<Training />}
-        />
+<Route
+  path="/my-partnerships"
+  element={<MyPartnerships />}
+/>
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+<Route
+  path="/edit-partnership/:id"
+  element={<EditPartnership />}
+/>
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        {/* AUTH */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
       </Routes>
 

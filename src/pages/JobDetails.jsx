@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { uploadCV } from "../utils/uploadCV";
 import { useParams } from "react-router-dom";
 import {
+    
   doc,
   getDoc,
   addDoc,
@@ -12,11 +14,14 @@ export default function JobDetails() {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const [cv, setCv] = useState(null);
   useEffect(() => {
     loadJob();
   }, []);
-
+if (!cv) {
+  alert("Veuillez sélectionner votre CV.");
+  return;
+}
   async function loadJob() {
     try {
       const docRef = doc(db, "jobs", id);
@@ -61,16 +66,18 @@ export default function JobDetails() {
       alert("Veuillez vous connecter.");
       return;
     }
-
+const cvUrl = await uploadCV(cv);
     try {
       await addDoc(collection(db, "applications"), {
-        userId: auth.currentUser.uid,
-        email: auth.currentUser.email,
-        jobId: job.id,
-        jobTitle: job.title,
-        company: job.company,
-        createdAt: new Date(),
-      });
+  userId: auth.currentUser.uid,
+  email: auth.currentUser.email,
+  jobId: job.id,
+  cvUrl,
+  jobTitle: job.title,
+  company: job.company,
+  status: "En attente",
+  createdAt: new Date(),
+});
 
       alert("✅ Candidature envoyée avec succès !");
     } catch (error) {
@@ -84,7 +91,13 @@ export default function JobDetails() {
       <div className="max-w-5xl mx-auto px-6">
 
         <div className="bg-white rounded-3xl shadow-xl p-10">
-
+{job.image && (
+  <img
+    src={job.image}
+    alt={job.title}
+    className="w-full h-96 object-cover rounded-2xl mb-8"
+  />
+)}
           <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold">
             Emploi
           </span>
@@ -123,7 +136,18 @@ export default function JobDetails() {
           >
             Postuler maintenant
           </button>
+<div className="mt-10">
+  <label className="block font-semibold mb-2">
+    Joindre votre CV (PDF)
+  </label>
 
+  <input
+    type="file"
+    accept=".pdf"
+    onChange={(e) => setCv(e.target.files[0])}
+    className="w-full border p-4 rounded-xl"
+  />
+</div>
         </div>
 
       </div>

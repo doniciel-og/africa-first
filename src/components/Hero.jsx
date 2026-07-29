@@ -1,12 +1,16 @@
 import heroBanner from "../assets/hero-banner.png";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-black via-green-950 to-black text-white pt-28">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-14 items-center min-h-[85vh]">
-<div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-green-500/20 rounded-full blur-3xl"></div>
+      {/* Effets d'arrière-plan */}
+      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-green-500/20 rounded-full blur-3xl"></div>
 
-<div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl"></div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-14 items-center min-h-[85vh]">
+
         {/* Texte */}
         <div>
 
@@ -26,33 +30,61 @@ export default function Hero() {
             le développement économique du continent africain.
           </p>
 
+          {/* Barre de recherche */}
+          <div className="mt-10 bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-3 shadow-2xl">
+
+            <input
+              type="text"
+              placeholder="Rechercher un emploi, une formation, un investissement..."
+              className="flex-1 px-5 py-4 rounded-xl text-gray-800 outline-none"
+            />
+
+            <Link
+              to="/jobs"
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-center transition"
+            >
+              Rechercher
+            </Link>
+
+          </div>
+
+          {/* Boutons */}
           <div className="flex flex-wrap gap-4 mt-10">
 
-            <button className="bg-green-500 hover:bg-green-600 transition-all duration-300 hover:scale-105 px-8 py-4 rounded-xl font-bold shadow-lg">
+            <Link
+              to="/register"
+              className="bg-green-500 hover:bg-green-600 transition-all duration-300 hover:scale-105 px-8 py-4 rounded-xl font-bold shadow-lg"
+            >
               Commencer gratuitement
-            </button>
+            </Link>
 
-            <button className="border border-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-4 rounded-xl">
-              Découvrir
-            </button>
-<div className="flex flex-wrap gap-10 mt-12">
+            <Link
+              to="/jobs"
+              className="border border-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-4 rounded-xl"
+            >
+              Découvrir les opportunités
+            </Link>
 
-  <div>
-    <h2 className="text-4xl font-bold text-green-400">10 000+</h2>
-    <p className="text-gray-400">Utilisateurs</p>
-  </div>
+          </div>
 
-  <div>
-    <h2 className="text-4xl font-bold text-green-400">500+</h2>
-    <p className="text-gray-400">Entreprises</p>
-  </div>
+          {/* Statistiques */}
+          <div className="flex flex-wrap gap-10 mt-12">
 
-  <div>
-    <h2 className="text-4xl font-bold text-green-400">20+</h2>
-    <p className="text-gray-400">Pays africains</p>
-  </div>
+            <div>
+              <h2 className="text-4xl font-bold text-green-400">10 000+</h2>
+              <p className="text-gray-400">Utilisateurs</p>
+            </div>
 
-</div>
+            <div>
+              <h2 className="text-4xl font-bold text-green-400">500+</h2>
+              <p className="text-gray-400">Entreprises</p>
+            </div>
+
+            <div>
+              <h2 className="text-4xl font-bold text-green-400">20+</h2>
+              <p className="text-gray-400">Pays africains</p>
+            </div>
+
           </div>
 
         </div>
