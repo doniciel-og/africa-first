@@ -9,6 +9,8 @@ import {
   query,
   onSnapshot,
   serverTimestamp,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 
 export default function Chat() {
@@ -16,61 +18,67 @@ export default function Chat() {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-const messagesEndRef = useRef(null);
+
+  const messagesEndRef = useRef(null);
+
+  // Charger les messages en temps réel
   useEffect(() => {
-  const q = query(
-    collection(db, "conversations", id, "messages"),
-    orderBy("createdAt", "asc")
-  );
-
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-useEffect(() => {
-  messagesEndRef.current?.scrollIntoView({
-    behavior: "smooth",
-  });
-}, [messages]);
-    setMessages(data);
-  });
-
-  return () => unsubscribe();
-}, [id]);
-
-  async function loadMessages() {
     const q = query(
       collection(db, "conversations", id, "messages"),
       orderBy("createdAt", "asc")
     );
 
-    const snapshot = await getDocs(q);
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+      setMessages(data);
+    });
 
-    setMessages(data);
-  }
+    return () => unsubscribe();
+  }, [id]);
+
+  // Descendre automatiquement en bas du chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   async function sendMessage() {
     if (!message.trim()) return;
 
-    await addDoc(
-  collection(db, "conversations", id, "messages"),
-  {
-    senderId: auth.currentUser.uid,
-    senderName: auth.currentUser.displayName || auth.currentUser.email,
-    text: message,
-    createdAt: serverTimestamp(),
-  }
-);;
+    const text = message;
 
-    setMessage("");
+    try {
+      // Ajouter le message
+      await addDoc(
+        collection(db, "conversations", id, "messages"),
+        {
+          senderId: auth.currentUser.uid,
+          senderName:
+            auth.currentUser.displayName ||
+            auth.currentUser.email,
 
-    
+          text: text,
+
+          createdAt: serverTimestamp(),
+        }
+      );
+
+      // Mettre à jour la conversation
+      await updateDoc(doc(db, "conversations", id), {
+        lastMessage: text,
+        lastMessageAt: serverTimestamp(),
+      });
+
+      setMessage("");
+    } catch (error) {
+      console.log(error);
+      alert("Erreur lors de l'envoi du message.");
+    }
   }
 
   return (
@@ -100,7 +108,7 @@ useEffect(() => {
                     : "justify-start"
                 }`}
               >
-<div ref={messagesEndRef}></div>
+
                 <div
                   className={`max-w-md px-5 py-3 rounded-2xl ${
                     msg.senderId === auth.currentUser.uid
@@ -108,21 +116,29 @@ useEffect(() => {
                       : "bg-gray-200"
                   }`}
                 >
-<p className="text-xs font-bold mb-1">
-  {msg.senderName}
-</p>
-                  {msg.text}
-<p className="text-[11px] opacity-70 mt-2 text-right">
-  {msg.createdAt?.toDate().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  })}
-</p>
+
+                  <p className="text-xs font-bold mb-1">
+                    {msg.senderName}
+                  </p>
+
+                  <p>
+                    {msg.text}
+                  </p>
+
+                  <p className="text-[11px] opacity-70 mt-2 text-right">
+                    {msg.createdAt?.toDate?.().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+
                 </div>
 
               </div>
 
             ))}
+
+            <div ref={messagesEndRef} />
 
           </div>
 
@@ -131,14 +147,15 @@ useEffect(() => {
             <input
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
               className="flex-1 border rounded-xl p-4"
               placeholder="Écrire un message..."
             />
-onKeyDown={(e) => {
-  if (e.key === "Enter") {
-    sendMessage();
-  }
-}}
+
             <button
               onClick={sendMessage}
               className="bg-green-600 hover:bg-green-700 text-white px-8 rounded-xl"
