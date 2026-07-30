@@ -7,7 +7,7 @@ import logo from "../assets/logo.png";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [accountType, setAccountType] = useState("");
 
   const handleLogout = async () => {
     await signOut(auth);

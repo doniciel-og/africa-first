@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import CompanyDashboard from "./pages/CompanyDashboard";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
-
+import Applications from "./pages/Applications";
 import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
 import CreateJob from "./pages/CreateJob";
@@ -28,7 +29,7 @@ import MyPartnerships from "./pages/MyPartnerships";
 import EditPartnership from "./pages/EditPartnership";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
+import Messages from "./pages/Messages";
 function App() {
   return (
     <BrowserRouter>
@@ -51,7 +52,10 @@ function App() {
 
         {/* INVESTISSEMENTS */}
         <Route path="/investments" element={<Investments />} />
-
+<Route
+  path="/messages"
+  element={<Messages />}
+/>
 <Route
   path="/create-investment"
   element={<CreateInvestment />}
@@ -61,7 +65,10 @@ function App() {
   path="/my-investments"
   element={<MyInvestments />}
 />
-
+<Route
+  path="/chat/:id"
+  element={<Chat />}
+/>
 <Route
   path="/edit-investment/:id"
   element={<EditInvestment />}
@@ -69,7 +76,14 @@ function App() {
 
         {/* FORMATIONS */}
 <Route path="/training" element={<Training />} />
-
+<Route
+  path="/company-dashboard"
+  element={
+    <ProtectedRoute allowedTypes={["Entreprise"]}>
+      <CompanyDashboard />
+    </ProtectedRoute>
+  }
+/>
 <Route
   path="/create-training"
   element={<CreateTraining />}
@@ -80,8 +94,12 @@ function App() {
   element={<MyTrainings />}
 />
 <Route
-  path="/my-applications"
-  element={<MyApplications />}
+  path="/applications"
+  element={
+    <ProtectedRoute allowedTypes={["Entreprise"]}>
+      <Applications />
+    </ProtectedRoute>
+  }
 />
 <Route
   path="/edit-training/:id"

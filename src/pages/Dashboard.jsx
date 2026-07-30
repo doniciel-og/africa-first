@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
-import { Link } from "react-router-dom";
-import {
 
+import {
   doc,
   getDoc,
   collection,
@@ -11,18 +10,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
-<div className="mt-10 flex flex-wrap gap-4">
 
-  <Link
-    to="/my-jobs"
-    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
-  >
-    💼 Mes offres d'emploi
-  </Link>
-
-</div>
 export default function Dashboard() {
-  const user = auth.currentUser;
+    const navigate = useNavigate();
+const user = auth.currentUser;
+  
 
   const [profile, setProfile] = useState(null);
 
@@ -42,7 +34,10 @@ const [trainings, setTrainings] = useState(0);
       if (userSnap.exists()) {
         setProfile(userSnap.data());
       }
-
+if (userSnap.data().accountType === "Entreprise") {
+  navigate("/company-dashboard");
+  return;
+}
       // Candidatures
       const applicationsQuery = query(
         collection(db, "applications"),
@@ -98,7 +93,22 @@ setTrainings(trainingsSnap.size);
 
           <div className="flex items-center gap-6">
 <div className="mt-10 flex flex-wrap gap-4">
+<div className="bg-red-50 rounded-2xl p-6">
+  <h2 className="text-4xl font-bold text-red-600">
+    📄
+  </h2>
 
+  <p className="mt-3 font-semibold">
+    Candidatures reçues
+  </p>
+
+  <Link
+    to="/applications"
+    className="text-red-600 font-bold"
+  >
+    Voir →
+  </Link>
+</div>
   <Link
     to="/my-jobs"
     className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
