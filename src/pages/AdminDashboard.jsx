@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-
+import { Link } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -118,7 +118,56 @@ export default function AdminDashboard() {
         </div>
 
       </div>
+<div className="mt-14">
 
+  <h2 className="text-3xl font-bold mb-6">
+    Administration
+  </h2>
+
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <Link
+      to="/admin-create-job"
+      className="bg-green-600 hover:bg-green-700 text-white rounded-2xl p-8 shadow-lg"
+    >
+      <h3 className="text-2xl font-bold">
+        ➕ Publier une offre
+      </h3>
+
+      <p className="mt-3">
+        Créer directement une offre pour une entreprise partenaire.
+      </p>
+    </Link>
+
+    <Link
+      to="/admin-job-requests"
+      className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl p-8 shadow-lg"
+    >
+      <h3 className="text-2xl font-bold">
+        📄 Demandes d'offres
+      </h3>
+
+      <p className="mt-3">
+        Valider ou refuser les offres proposées par les entreprises.
+      </p>
+    </Link>
+
+    <Link
+      to="/admin-applications"
+      className="bg-purple-600 hover:bg-purple-700 text-white rounded-2xl p-8 shadow-lg"
+    >
+      <h3 className="text-2xl font-bold">
+        👥 Candidatures
+      </h3>
+
+      <p className="mt-3">
+        Consulter toutes les candidatures reçues.
+      </p>
+    </Link>
+
+  </div>
+
+</div>
     </div>
   );
 }

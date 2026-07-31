@@ -29,9 +29,11 @@ import MyPartnerships from "./pages/MyPartnerships";
 import EditPartnership from "./pages/EditPartnership";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminCreateJob from "./pages/AdminCreateJob";
 import AdminJobRequests from "./pages/AdminJobRequests";
 import Register from "./pages/Register";
 import Messages from "./pages/Messages";
+import AdminApplications from "./pages/AdminApplications";
 function App() {
   return (
     <BrowserRouter>
@@ -128,10 +130,20 @@ function App() {
   element={<AdminJobRequests />}
 />
 <Route
+  path="/admin-create-job"
+  element={<AdminCreateJob />}
+/>
+<Route
   path="/edit-partnership/:id"
   element={<EditPartnership />}
 />
-
+<Route
+  path="/admin-dashboard"
+  element={<AdminDashboard />}
+/><Route
+  path="/admin-applications"
+  element={<AdminApplications />}
+/>
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
