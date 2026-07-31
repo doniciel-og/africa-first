@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   collection,
   getDocs,
@@ -6,6 +7,8 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+
+import { db } from "../firebase";
 
 export default function AdminJobRequests() {
 
@@ -16,18 +19,23 @@ export default function AdminJobRequests() {
   }, []);
 
   async function loadRequests() {
+  try {
+    const snapshot = await getDocs(collection(db, "jobRequests"));
 
-    const snapshot = await getDocs(
-      collection(db, "jobRequests")
-    );
+    console.log("Nombre de documents :", snapshot.size);
 
     const data = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
+    console.log("Demandes :", data);
+
     setRequests(data);
+  } catch (error) {
+    console.error("Erreur :", error);
   }
+}
 async function publishJob(job) {
   try {
     await addDoc(collection(db, "jobs"), {
