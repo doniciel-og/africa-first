@@ -27,18 +27,22 @@ const [image, setImage] = useState(null);
     imageUrl = await uploadImage(image);
   }
 
-  await addDoc(collection(db, "jobs"), {
-    title,
-    company,
-    location,
-    salary,
-    description,
-    image: imageUrl,
-    userId: auth.currentUser.uid,
-    createdAt: new Date(),
-  });
+  await addDoc(collection(db, "jobRequests"), {
+  title,
+  company,
+  location,
+  salary,
+  description,
+  image: imageUrl,
 
-  alert("✅ Offre publiée avec succès !");
+  userId: auth.currentUser.uid,
+
+  status: "En attente",
+
+  createdAt: new Date(),
+});
+
+  alert("✅ Votre demande a été envoyée à Africa First. Après vérification, elle sera publiée.");
 
   navigate("/jobs");
 } catch (error) {
@@ -52,7 +56,7 @@ const [image, setImage] = useState(null);
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-10">
 
         <h1 className="text-4xl font-bold mb-8">
-          Publier une offre d'emploi
+          Envoyer la demande
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -117,7 +121,7 @@ const [image, setImage] = useState(null);
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold"
           >
-            Publier l'offre
+            Soumettre une offre d'emploi
           </button>
 
         </form>

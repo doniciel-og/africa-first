@@ -31,10 +31,14 @@ const [trainings, setTrainings] = useState(0);
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
-      if (userSnap.exists()) {
-        setProfile(userSnap.data());
-      }
-if (userSnap.data().accountType === "Entreprise") {
+      const accountType = userSnap.data().accountType;
+
+if (accountType === "Admin") {
+  navigate("/admin-dashboard");
+  return;
+}
+
+if (accountType === "Entreprise") {
   navigate("/company-dashboard");
   return;
 }

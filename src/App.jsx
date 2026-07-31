@@ -28,6 +28,8 @@ import CreatePartnership from "./pages/CreatePartnership";
 import MyPartnerships from "./pages/MyPartnerships";
 import EditPartnership from "./pages/EditPartnership";
 import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminJobRequests from "./pages/AdminJobRequests";
 import Register from "./pages/Register";
 import Messages from "./pages/Messages";
 function App() {
@@ -121,7 +123,10 @@ function App() {
   path="/my-partnerships"
   element={<MyPartnerships />}
 />
-
+<Route
+  path="/admin-job-requests"
+  element={<AdminJobRequests />}
+/>
 <Route
   path="/edit-partnership/:id"
   element={<EditPartnership />}

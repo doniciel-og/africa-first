@@ -1,0 +1,124 @@
+import { useEffect, useState } from "react";
+import { db } from "../firebase";
+
+import {
+  collection,
+  getDocs,
+} from "firebase/firestore";
+
+export default function AdminDashboard() {
+
+  const [users, setUsers] = useState(0);
+  const [companies, setCompanies] = useState(0);
+  const [jobs, setJobs] = useState(0);
+  const [applications, setApplications] = useState(0);
+  const [partnerships, setPartnerships] = useState(0);
+  const [investments, setInvestments] = useState(0);
+  const [trainings, setTrainings] = useState(0);
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  async function loadDashboard() {
+
+    const usersSnap = await getDocs(collection(db, "users"));
+    setUsers(usersSnap.size);
+
+    const jobsSnap = await getDocs(collection(db, "jobs"));
+    setJobs(jobsSnap.size);
+
+    const applicationsSnap = await getDocs(collection(db, "applications"));
+    setApplications(applicationsSnap.size);
+
+    const partnershipsSnap = await getDocs(collection(db, "partnerships"));
+    setPartnerships(partnershipsSnap.size);
+
+    const investmentsSnap = await getDocs(collection(db, "investments"));
+    setInvestments(investmentsSnap.size);
+
+    const trainingsSnap = await getDocs(collection(db, "trainings"));
+    setTrainings(trainingsSnap.size);
+
+    let companyCount = 0;
+
+    usersSnap.forEach((doc) => {
+      if (doc.data().accountType === "Entreprise") {
+        companyCount++;
+      }
+    });
+
+    setCompanies(companyCount);
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 pt-28 pb-16">
+
+      <div className="max-w-7xl mx-auto px-6">
+
+        <h1 className="text-5xl font-bold">
+          Africa First - Administration
+        </h1>
+
+        <p className="text-gray-600 mt-3">
+          Tableau de bord général de la plateforme.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-green-600">
+              {users}
+            </h2>
+            <p className="mt-3">Utilisateurs</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-blue-600">
+              {companies}
+            </h2>
+            <p className="mt-3">Entreprises</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-yellow-600">
+              {jobs}
+            </h2>
+            <p className="mt-3">Offres d'emploi</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-red-600">
+              {applications}
+            </h2>
+            <p className="mt-3">Candidatures</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-purple-600">
+              {partnerships}
+            </h2>
+            <p className="mt-3">Partenariats</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-indigo-600">
+              {investments}
+            </h2>
+            <p className="mt-3">Investissements</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-5xl font-bold text-pink-600">
+              {trainings}
+            </h2>
+            <p className="mt-3">Formations</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
