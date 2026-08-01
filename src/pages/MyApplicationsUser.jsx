@@ -39,6 +39,25 @@ export default function MyApplicationsUser() {
     }
   }
 
+  function statusColor(status) {
+    switch (status) {
+      case "Présélectionné":
+        return "text-blue-600";
+      case "Convoqué":
+        return "text-yellow-600";
+      case "Test réussi":
+        return "text-green-600";
+      case "Envoyé à l'entreprise":
+        return "text-indigo-600";
+      case "Recruté":
+        return "text-emerald-700";
+      case "Refusé":
+        return "text-red-600";
+      default:
+        return "text-gray-700";
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -76,23 +95,43 @@ export default function MyApplicationsUser() {
                 </h2>
 
                 <p className="mt-3 text-gray-600">
-                  Entreprise : {application.company}
+                  <strong>Entreprise :</strong> {application.company}
                 </p>
 
                 <p className="mt-4">
-                  Statut :
-                  <span
-                    className={`ml-2 font-bold ${
-                      application.status === "Acceptée"
-                        ? "text-green-600"
-                        : application.status === "Refusée"
-                        ? "text-red-600"
-                        : "text-yellow-600"
-                    }`}
-                  >
-                    {application.status}
+                  <strong>Statut :</strong>
+
+                  <span className={`ml-2 font-bold ${statusColor(application.status)}`}>
+                    {application.status || "En attente"}
                   </span>
                 </p>
+
+                {application.testDate && (
+                  <div className="mt-6 bg-yellow-50 border border-yellow-300 rounded-xl p-5">
+
+                    <h3 className="text-xl font-bold text-yellow-700 mb-4">
+                      📅 Convocation au test
+                    </h3>
+
+                    <p>
+                      <strong>Date :</strong> {application.testDate}
+                    </p>
+
+                    <p>
+                      <strong>Heure :</strong> {application.testTime}
+                    </p>
+
+                    <p>
+                      <strong>Lieu :</strong> {application.testLocation}
+                    </p>
+
+                    <p className="mt-3 whitespace-pre-line">
+                      <strong>Instructions :</strong><br />
+                      {application.instructions}
+                    </p>
+
+                  </div>
+                )}
 
               </div>
 

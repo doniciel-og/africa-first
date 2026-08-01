@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -8,7 +9,6 @@ import {
 import { db } from "../firebase";
 
 export default function AdminApplications() {
-
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
@@ -16,7 +16,6 @@ export default function AdminApplications() {
   }, []);
 
   async function loadApplications() {
-
     const snapshot = await getDocs(
       collection(db, "applications")
     );
@@ -30,7 +29,6 @@ export default function AdminApplications() {
   }
 
   async function updateStatus(id, status) {
-
     await updateDoc(doc(db, "applications", id), {
       status,
     });
@@ -40,7 +38,6 @@ export default function AdminApplications() {
 
   return (
     <div className="min-h-screen bg-gray-100 pt-28 pb-16">
-
       <div className="max-w-7xl mx-auto px-6">
 
         <h1 className="text-5xl font-bold mb-10">
@@ -81,7 +78,6 @@ export default function AdminApplications() {
               </p>
 
               <div className="mt-4">
-
                 <a
                   href={app.cvUrl}
                   target="_blank"
@@ -90,7 +86,6 @@ export default function AdminApplications() {
                 >
                   📄 Voir le CV
                 </a>
-
               </div>
 
               <div className="mt-6">
@@ -105,43 +100,53 @@ export default function AdminApplications() {
                 <div className="flex flex-wrap gap-3">
 
                   <button
-                    onClick={() => updateStatus(app.id, "Présélectionné")}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      updateStatus(app.id, "Présélectionné")
+                    }
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                   >
                     Présélectionner
                   </button>
 
-                  <button
-                    onClick={() => updateStatus(app.id, "Convoqué")}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
+                  <Link
+                    to={`/admin-schedule-test/${app.id}`}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
                   >
-                    Convoquer
-                  </button>
+                    📅 Planifier le test
+                  </Link>
 
                   <button
-                    onClick={() => updateStatus(app.id, "Test réussi")}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      updateStatus(app.id, "Test réussi")
+                    }
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                   >
                     Test réussi
                   </button>
 
                   <button
-                    onClick={() => updateStatus(app.id, "Envoyé à l'entreprise")}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      updateStatus(app.id, "Envoyé à l'entreprise")
+                    }
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg"
                   >
                     Envoyer
                   </button>
 
                   <button
-                    onClick={() => updateStatus(app.id, "Recruté")}
-                    className="bg-emerald-700 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      updateStatus(app.id, "Recruté")
+                    }
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg"
                   >
                     Recruté
                   </button>
 
                   <button
-                    onClick={() => updateStatus(app.id, "Refusé")}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      updateStatus(app.id, "Refusé")
+                    }
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
                   >
                     Refuser
                   </button>
@@ -157,7 +162,6 @@ export default function AdminApplications() {
         </div>
 
       </div>
-
     </div>
   );
 }

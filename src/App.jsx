@@ -31,6 +31,7 @@ import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminCreateJob from "./pages/AdminCreateJob";
 import AdminJobRequests from "./pages/AdminJobRequests";
+import AdminScheduleTest from "./pages/AdminScheduleTest";
 import Register from "./pages/Register";
 import Messages from "./pages/Messages";
 import AdminApplications from "./pages/AdminApplications";
@@ -46,7 +47,10 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
-
+<Route
+  path="/admin-schedule-test/:id"
+  element={<AdminScheduleTest />}
+/>
         {/* EMPLOIS */}
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
