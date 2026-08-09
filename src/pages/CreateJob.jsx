@@ -3,6 +3,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../utils/cloudinary";
+
 export default function CreateJob() {
   const navigate = useNavigate();
 
@@ -10,8 +11,10 @@ export default function CreateJob() {
   const [company, setCompany] = useState("");
   const [location, setLocation] = useState("");
   const [salary, setSalary] = useState("");
+  const [contractType, setContractType] = useState("CDI");
   const [description, setDescription] = useState("");
-const [image, setImage] = useState(null);
+  const [image, setImage] = useState(null);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -21,45 +24,57 @@ const [image, setImage] = useState(null);
     }
 
     try {
-  let imageUrl = "";
+      let imageUrl = "";
 
-  if (image) {
-    imageUrl = await uploadImage(image);
-  }
+      if (image) {
+        imageUrl = await uploadImage(image);
+      }
 
-  await addDoc(collection(db, "jobRequests"), {
-  title,
-  company,
-  location,
-  salary,
-  description,
-  image: imageUrl,
+      await addDoc(collection(db, "jobRequests"), {
+        title,
+        company,
+        location,
+        salary,
+        contractType,
+        description,
+        image: imageUrl,
 
-  userId: auth.currentUser.uid,
+        userId: auth.currentUser.uid,
 
-  status: "En attente",
+        status: "En attente",
 
-  createdAt: new Date(),
-});
+        createdAt: new Date(),
+      });
 
-  alert("✅ Votre demande a été envoyée à Africa First. Après vérification, elle sera publiée.");
+      alert(
+        "✅ Votre demande a été envoyée à Africa First. Après vérification, elle sera publiée."
+      );
 
-  navigate("/jobs");
-} catch (error) {
-      console.log(error)
+      navigate("/jobs");
+
+    } catch (error) {
+      console.log(error);
       alert("Erreur lors de la publication.");
     }
   }
 
   return (
     <div className="min-h-screen bg-gray-100 pt-28 pb-16">
+
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-10">
 
-        <h1 className="text-4xl font-bold mb-8">
-          Envoyer la demande
+        <h1 className="text-4xl font-bold mb-3">
+          Envoyer une offre d'emploi
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <p className="text-gray-500 mb-8">
+          Votre offre sera vérifiée par Africa First avant sa publication.
+        </p>
+
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
 
           <input
             type="text"
@@ -96,18 +111,42 @@ const [image, setImage] = useState(null);
             className="w-full border p-4 rounded-xl"
             required
           />
-<div>
-  <label className="block font-semibold mb-2">
-    Image de l'offre
-  </label>
 
-  <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => setImage(e.target.files[0])}
-    className="w-full border p-4 rounded-xl"
-  />
-</div>
+          <div>
+
+            <label className="block font-semibold mb-2">
+              Type de contrat
+            </label>
+
+            <select
+              value={contractType}
+              onChange={(e) => setContractType(e.target.value)}
+              className="w-full border p-4 rounded-xl"
+            >
+              <option>CDI</option>
+              <option>CDD</option>
+              <option>Stage</option>
+              <option>Freelance</option>
+              <option>Temps partiel</option>
+            </select>
+
+          </div>
+
+          <div>
+
+            <label className="block font-semibold mb-2">
+              Image de l'offre
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="w-full border p-4 rounded-xl"
+            />
+
+          </div>
+
           <textarea
             rows="6"
             placeholder="Description de l'offre"
@@ -127,6 +166,7 @@ const [image, setImage] = useState(null);
         </form>
 
       </div>
+
     </div>
   );
 }

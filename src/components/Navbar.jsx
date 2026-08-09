@@ -1,27 +1,84 @@
 import { useEffect, useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { Menu } from "lucide-react";
+import { Menu, Bell } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const [accountType, setAccountType] = useState("");
-
+const [notificationCount, setNotificationCount] = useState(0);
+const [notifications, setNotifications] = useState([]);
+const [showNotifications, setShowNotifications] = useState(false);
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/");
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+  let unsubscribeNotifications = null;
 
-    return () => unsubscribe();
-  }, []);
+  const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
 
+    if (unsubscribeNotifications) {
+      unsubscribeNotifications();
+      unsubscribeNotifications = null;
+    }
+
+    if (currentUser) {
+      const q = query(
+        collection(db, "notifications"),
+        where("userId", "==", currentUser.uid),
+        where("read", "==", false)
+      );
+
+      unsubscribeNotifications = onSnapshot(q, (snapshot) => {
+        setNotificationCount(snapshot.size);
+
+setNotifications(
+  snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+);
+      });
+    } else {
+      setNotificationCount(0);
+    }
+  });
+async function markNotificationAsRead(notification) {
+  try {
+    if (!notification.read) {
+      await updateDoc(
+        doc(db, "notifications", notification.id),
+        {
+          read: true,
+        }
+      );
+    }
+
+    setShowNotifications(false);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+  return () => {
+    unsubscribeAuth();
+    if (unsubscribeNotifications) {
+      unsubscribeNotifications();
+    }
+  };
+}, []);
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-green-500/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -92,6 +149,86 @@ export default function Navbar() {
 
           {user ? (
             <>
+            <div className="relative">
+
+  <button
+    onClick={() => setShowNotifications(!showNotifications)}
+    className="relative text-white hover:text-green-400 transition"
+  >
+
+    <Bell size={24} />
+
+    {notificationCount > 0 && (
+      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+        {notificationCount}
+      </span>
+    )}
+
+  </button>
+
+  {showNotifications && (
+
+    <div className="absolute right-0 mt-4 w-96 bg-white rounded-2xl shadow-2xl border overflow-hidden z-50">
+
+      <div className="p-5 border-b">
+
+        <h2 className="text-xl font-bold">
+          Notifications
+        </h2>
+
+      </div>
+
+      <div className="max-h-96 overflow-y-auto">
+
+        {notifications.length === 0 ? (
+
+          <div className="p-6 text-center text-gray-500">
+            Aucune notification.
+          </div>
+
+        ) : (
+
+          notifications.slice(0, 5).map((notification) => (
+
+            <div
+  key={notification.id}
+  onClick={() => markNotificationAsRead(notification)}
+  className={`p-5 border-b cursor-pointer transition ${
+    notification.read
+      ? "bg-white hover:bg-gray-50"
+      : "bg-green-50 hover:bg-green-100"
+  }`}
+>
+
+              <h3 className="font-bold">
+                {notification.title}
+              </h3>
+
+              <p className="text-gray-600 mt-2 text-sm">
+                {notification.message}
+              </p>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
+      <Link
+        to="/notifications"
+        onClick={() => setShowNotifications(false)}
+        className="block text-center py-4 bg-green-600 hover:bg-green-700 text-white font-semibold"
+      >
+        Voir toutes les notifications →
+      </Link>
+
+    </div>
+
+  )}
+
+</div>
               <Link
                 to="/dashboard"
                 className="bg-white hover:bg-gray-100 text-black px-4 py-2 rounded-lg font-semibold"

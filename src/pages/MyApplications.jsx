@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { auth, db } from "../firebase";
-import { Link } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -8,6 +5,7 @@ import {
   doc,
   updateDoc,
   where,
+  addDoc,
 } from "firebase/firestore";
 
 export default function MyApplications() {
@@ -61,7 +59,27 @@ async function updateStatus(id, status) {
     await updateDoc(doc(db, "applications", id), {
       status,
     });
+const application = applications.find(
+  (app) => app.id === id
+);
 
+await addDoc(collection(db, "notifications"), {
+  userId: application.userId,
+
+  title:
+    status === "Acceptée"
+      ? "🎉 Candidature acceptée"
+      : "❌ Candidature refusée",
+
+  message:
+    status === "Acceptée"
+      ? `Votre candidature pour "${application.jobTitle}" a été acceptée.`
+      : `Votre candidature pour "${application.jobTitle}" a été refusée.`,
+
+  read: false,
+
+  createdAt: new Date(),
+});
     setApplications((prev) =>
       prev.map((app) =>
         app.id === id ? { ...app, status } : app

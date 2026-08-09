@@ -13,7 +13,8 @@ export default function AdminCreateJob() {
   const [salary, setSalary] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-
+const [contractType, setContractType] = useState("CDI");
+const [featured, setFeatured] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -29,13 +30,21 @@ export default function AdminCreateJob() {
         company,
         location,
         salary,
+        featured,
         description,
         image: imageUrl,
+contractType,
 
-        createdBy: "admin",
-        source: "Africa First",
+        // Informations de publication
+        createdBy: "Africa First",
+        publishedBy: "Africa First",
+        source: "admin",
+        isAdminPost: true,
+
+        // Statut
         status: "Publié",
 
+        // Date
         createdAt: new Date(),
       });
 
@@ -53,7 +62,24 @@ export default function AdminCreateJob() {
     <div className="min-h-screen bg-gray-100 pt-28 pb-16">
 
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+<div className="flex items-center gap-3">
 
+  <input
+    type="checkbox"
+    id="featured"
+    checked={featured}
+    onChange={(e) => setFeatured(e.target.checked)}
+    className="w-5 h-5"
+  />
+
+  <label
+    htmlFor="featured"
+    className="font-semibold"
+  >
+    ⭐ Mettre cette offre à la une
+  </label>
+
+</div>
         <h1 className="text-4xl font-bold mb-2">
           Publier une offre
         </h1>
@@ -102,7 +128,25 @@ export default function AdminCreateJob() {
             className="w-full border rounded-xl p-4"
             required
           />
+<div>
 
+  <label className="block font-semibold mb-2">
+    Type de contrat
+  </label>
+
+  <select
+    value={contractType}
+    onChange={(e) => setContractType(e.target.value)}
+    className="w-full border rounded-xl p-4"
+  >
+    <option>CDI</option>
+    <option>CDD</option>
+    <option>Stage</option>
+    <option>Freelance</option>
+    <option>Temps partiel</option>
+  </select>
+
+</div>
           <div>
             <label className="block font-semibold mb-2">
               Image de l'offre
@@ -129,7 +173,7 @@ export default function AdminCreateJob() {
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold"
           >
-            Publier l'offre
+            🚀 Publier l'offre
           </button>
 
         </form>

@@ -34,7 +34,9 @@ import AdminJobRequests from "./pages/AdminJobRequests";
 import AdminScheduleTest from "./pages/AdminScheduleTest";
 import Register from "./pages/Register";
 import Messages from "./pages/Messages";
+import MyJobRequests from "./pages/MyJobRequests";
 import AdminApplications from "./pages/AdminApplications";
+import Notifications from "./pages/Notifications";
 function App() {
   return (
     <BrowserRouter>
@@ -56,6 +58,10 @@ function App() {
         <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/create-job" element={<CreateJob />} />
         <Route path="/my-jobs" element={<MyJobs />} />
+        <Route
+  path="/my-job-requests"
+  element={<MyJobRequests />}
+/>
         <Route path="/edit-job/:id" element={<EditJob />} />
 
         {/* INVESTISSEMENTS */}
@@ -133,6 +139,7 @@ function App() {
   path="/admin-job-requests"
   element={<AdminJobRequests />}
 />
+<Route path="/notifications" element={<Notifications />} />
 <Route
   path="/admin-create-job"
   element={<AdminCreateJob />}

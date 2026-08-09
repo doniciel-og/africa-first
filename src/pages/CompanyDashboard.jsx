@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { auth, db } from "../firebase";
 import {
   collection,
@@ -88,6 +89,12 @@ export default function CompanyDashboard() {
             <p className="mt-3">
               Offres publiées
             </p>
+            <Link
+  to="/my-job-requests"
+  className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-semibold"
+>
+  📨 Mes demandes
+</Link>
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg p-8">
